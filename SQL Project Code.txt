@@ -1,0 +1,63 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf830
+{\fonttbl\f0\fnil\fcharset0 HelveticaNeue;}
+{\colortbl;\red255\green255\blue255;\red53\green53\blue53;}
+{\*\expandedcolortbl;;\cssrgb\c27059\c27059\c27059;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab560
+\pard\pardeftab560\slleading20\partightenfactor0
+
+\f0\fs24 \cf2 SQL PROJECT\
+\
+Percentage of Sales by Genre\
+\pard\pardeftab560\slleading20\pardirnatural\partightenfactor0
+\cf2 \
+SELECT Genre.Name, SUM(Invoice.Total) Expenditure\
+FROM Genre\
+JOIN Track\
+ON Genre.Genreid = Track.Genreid AND Track.Genreid IS NOT NULL\
+JOIN InvoiceLine\
+ON Track.Trackid = InvoiceLine.Trackid AND Track.Trackid IS NOT NULL\
+JOIN Invoice\
+ON InvoiceLine.Invoiceid =  Invoice.Invoiceid AND Invoice.Invoiceid IS NOT NULL\
+GROUP BY Genre.Genreid;\
+\
+\
+\pard\pardeftab560\slleading20\partightenfactor0
+\cf2 Which Artists had the most tracks available? \
+\
+SELECT Artist.Name, COUNT(Track.Albumid) popular\
+FROM Track\
+JOIN Album\
+ON Track.AlbumId = Album.AlbumId\
+JOIN Artist\
+ON Album.ArtistId = Artist.ArtistId\
+WHERE Track.GenreId <> 19 AND Artist.Name NOT LIKE '%Various%'\
+GROUP BY Artist.Name\
+ORDER BY popular DESC\
+LIMIT 10;\
+\
+\
+Trend in Average Sales Per Employee\
+\
+SELECT SUBSTR(Invoice.InvoiceDate, 1,4) inv_year, SUM(Invoice.Total)/COUNT(distinct Employee.EmployeeId) sales_emp\
+FROM Employee\
+JOIN Customer\
+ON Employee.EmployeeId = Customer.SupportRepId\
+JOIN Invoice\
+ON Customer.CustomerId = Invoice.CustomerId \
+GROUP BY inv_year\
+ORDER BY inv_year;\
+\
+\
+Who are the top 10 customers? \
+\pard\pardeftab560\slleading20\pardirnatural\partightenfactor0
+\cf2 \
+\pard\pardeftab560\slleading20\partightenfactor0
+\cf2 SELECT Customer.Company, SUM(Invoice.Total) Expenditure\
+FROM Invoice\
+JOIN Customer\
+ON Customer.CustomerId = Invoice.CustomerId AND Customer.Company IS NOT NULL\
+GROUP BY Customer.CustomerId\
+ORDER BY Expenditure\
+LIMIT 10;\
+}
